@@ -20,6 +20,7 @@ export class StudentsRepository {
       .getMany();
   }
 
+  @Trace()
   async find() {
     return await this.studentRepository.find({
       relations: ['course'],

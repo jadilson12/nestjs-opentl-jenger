@@ -6,7 +6,7 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
-import { TypeormInstrumentation } from 'opentelemetry-instrumentation-typeorm';
+// import { TypeormInstrumentation } from 'opentelemetry-instrumentation-typeorm';
 
 @Injectable()
 export class TracingService {
@@ -29,7 +29,7 @@ export class TracingService {
       }),
       instrumentations: [
         new HttpInstrumentation(),
-        new TypeormInstrumentation(),
+        // new TypeormInstrumentation(),
         new NestInstrumentation({
           enabled: true,
         }),

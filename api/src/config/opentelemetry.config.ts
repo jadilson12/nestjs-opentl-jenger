@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { NodeSDK } from '@opentelemetry/sdk-node';
-import { TypeormInstrumentation } from 'opentelemetry-instrumentation-typeorm';
+// import { TypeormInstrumentation } from 'opentelemetry-instrumentation-typeorm';
 
 export function initializeOpenTelemetry() {
   const logger = new Logger(initializeOpenTelemetry.name);
@@ -14,7 +14,10 @@ export function initializeOpenTelemetry() {
     traceExporter: new OTLPTraceExporter({
       url: config.get('OTEL_EXPORTER_OTLP_ENDPOINT'),
     }),
-    instrumentations: [new HttpInstrumentation(), new TypeormInstrumentation()],
+    instrumentations: [
+      new HttpInstrumentation(),
+      //  new TypeormInstrumentation()
+    ],
   });
 
   sdk.start();
