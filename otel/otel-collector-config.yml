@@ -6,14 +6,19 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
 
-exporters:
-  debug:
-    verbosity: detailed
+  exporters:
+    debug:
+      verbosity: detailed
 
-  otlp:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
+    otlp:
+      endpoint: jaeger:4317
+      tls:
+        insecure: true
+
+    otlphttp/tempo:
+        endpoint: http://tempo:4319
+        tls:
+          insecure: true
 
 processors:
   batch: {}
@@ -27,7 +32,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [debug, otlp]
+      exporters: [debug, otlp, otlphttp/tempo]
     metrics:
       receivers: [otlp]
       processors: [batch]

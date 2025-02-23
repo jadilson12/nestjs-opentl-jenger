@@ -2,7 +2,7 @@ name: laboratory-OTL
 
 services:
   postgres:
-    container_name: postgres
+    container_name: postgres_nestjs_opt
     image: postgres:14
     environment:
       - POSTGRES_DB=study
@@ -18,8 +18,27 @@ services:
     container_name: jaeger
     ports:
       - "8081:16686" # Jaeger UI
-      - "14268"
-      - "14250"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200"    # tempo
+      - "4319:4319"    # otlp http 
 
   otel-collector:
     image: otel/opentelemetry-collector:latest
@@ -37,8 +56,10 @@ services:
       - "55679:55679" # zpages extension
     depends_on:
       - jaeger
+      - grafana 
     links:
       - jaeger
+      - grafana
 
   api:
     build:
@@ -69,3 +90,6 @@ services:
       - ./api:/app
       - /app/node_modules
     command: sh -c "npm install && npm run start:dev"
+
+volumes:
+  grafana-storage:
